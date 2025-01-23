@@ -162,30 +162,3 @@ class  SiglipEncoderLayer(nn.Module):
         hidden_states += residual
         return hidden_states
 
-class SiglipVisionTransformer(nn.Modeule):
-    def __init__(self, config: SiglipVisionConfig):
-        super().init()
-        self.config = config
-        embed_dim = config.hidden_size
-        self.embeddings = SiglipVisionEmbeddings(config)
-        self.encoder = SiglipEncoder(config)
-        self.post_layernorm = nn.LayerNorm(embed_dim, eps=config.layer_norm_eps)
-
-    def forward(self, pixel_values: torch.Tensor) -> torch.Tensor:
-        #pixel_values: [Batch_Size, Channels, Height, Width] -> [Batch_Size, Num_Patches, Embed_Dim
-        hidden_states = self.embeddings(pixel_values)
-        last_hidden_state = self.encoder(inputs_embeds=hidden_states)
-        last_hidden_state = self.post_layernorm(last_hidden_state)
-        return last_hidden_state
-
-
-class SiglipVisionModel(nn.Model):
-
-    def __init__(self, config: SiglipVisionConfig):
-        super().init()
-        self.config = config
-        self.vision_model = SiglipVisionTransformer(config)
-
-    def forward(self, pixel_values):
-        #pixel_values: [Batch_Size, Channels, Height, Width] -> [Batch_Size, Num_Patches, Embed_Dim]
-        return self.vision_model(pixel_values=pixel_values)
