@@ -165,7 +165,7 @@ class  SiglipEncoderLayer(nn.Module):
 class SiglipVisionTransformer(nn.Modeule):
     def __init__(self, config: SiglipVisionConfig):
         super().init()
-        self.config = config
+        self.config = confi
         embed_dim = config.hidden_size
         self.embeddings = SiglipVisionEmbeddings(config)
         self.encoder = SiglipEncoder(config)
